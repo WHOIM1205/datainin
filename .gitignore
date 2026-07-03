@@ -1,0 +1,21 @@
+# Raw & intermediate data are reproducible via data/download.py — keep them out of git.
+data/raw/
+data/interim/
+data/processed/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Test / tooling caches
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+*.swp

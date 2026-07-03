@@ -1,0 +1,19 @@
+# Python 3.12. Pinned to the versions verified in this environment for reproducibility.
+# Installed & verified in Module 1:
+pandas==3.0.1
+numpy==2.3.5
+PyYAML==6.0.3
+pyarrow==24.0.0   # Parquet engine (Module 3): preserves dtypes + tz-aware datetimes
+
+# Required by later modules (EDA / stats / viz). Version floors chosen for Python 3.12 compat;
+# pin exactly after first install in the module that introduces them.
+matplotlib==3.11.0
+scipy==1.17.0
+statsmodels==0.14.6
+scikit-learn==1.8.0
+
+# Notebook runtime (to open & Run-All notebooks/01_analysis.ipynb)
+jupyterlab>=4.0
+ipykernel==7.3.0
+nbformat==5.10.4
+nbconvert==7.17.1

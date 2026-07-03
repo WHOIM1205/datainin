@@ -1,0 +1,58 @@
+# Project configuration — single source of truth.
+# Schema below is VERIFIED against the raw files in Module 1 (not assumed).
+# See outputs/data_quality_report.md for the evidence behind every entry.
+
+seed: 42
+
+paths:
+  raw_sentiment: data/raw/fear_greed.csv
+  raw_trades: data/raw/hyperliquid_trades.csv
+  interim: data/interim
+  processed: data/processed
+  figures: outputs/figures
+  tables: outputs/tables
+
+# --- Dataset 1: Bitcoin Fear & Greed Index (2,644 rows x 4 cols, 0 missing, 0 dupes) ---
+sentiment:
+  columns:
+    timestamp: int64      # epoch seconds (redundant with `date`)
+    value: int64          # numeric index 0-100 (richer than PDF stated)
+    classification: str   # 5 buckets (NOT binary as PDF implied)
+    date: str             # YYYY-MM-DD, one row per calendar day
+  classification_values: [Extreme Fear, Fear, Neutral, Greed, Extreme Greed]
+  date_range: [2018-02-01, 2025-05-02]
+
+# --- Dataset 2: Hyperliquid Trader Data (211,224 rows x 16 cols, 0 missing, 0 full-row dupes) ---
+trades:
+  columns:
+    Account: str
+    Coin: str
+    Execution Price: float64
+    Size Tokens: float64
+    Size USD: float64
+    Side: str                 # BUY / SELL
+    Timestamp IST: str        # DD-MM-YYYY HH:MM, IST timezone — AUTHORITATIVE time field
+    Start Position: float64
+    Direction: str            # 12 values (Open/Close Long/Short + edge cases)
+    Closed PnL: float64
+    Transaction Hash: str
+    Order ID: int64
+    Crossed: bool
+    Fee: float64
+    Trade ID: float64         # LOSSY / rounded — NOT a unique key, do not use
+    Timestamp: float64        # LOSSY — only 7 unique values, do not use
+  authoritative_time_column: Timestamp IST
+  time_format: "%d-%m-%Y %H:%M"
+  timezone: Asia/Kolkata
+  side_values: [BUY, SELL]
+  date_range: [2023-05-01, 2025-05-01]
+  n_accounts: 32
+  n_coins: 246
+
+# Known data-integrity flags carried forward into cleaning (Module 3).
+integrity_flags:
+  no_leverage_column: true          # must proxy or exclude, with justification
+  lossy_trade_id: true              # 2,810 unique / 211,224 rows
+  lossy_numeric_timestamp: true     # 7 unique values; use Timestamp IST instead
+  closed_pnl_sparse: true           # ~50.6% of rows have PnL = 0 (open fills)
+  direction_edge_cases: true        # Auto-Deleveraging / Liquidated / Settlement / flips
